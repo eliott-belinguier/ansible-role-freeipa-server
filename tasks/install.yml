@@ -1,10 +1,19 @@
 ---
-- name: Install FreeIPA Server Packages
+- name: Install FreeIPA Server Packages (RedHat)
   package:
     name:
       - ipa-server
       - ipa-server-dns
     state: present
+  when: ansible_os_family == "RedHat"
+
+- name: Install FreeIPA Server Packages (Debian)
+  package:
+    name:
+      - freeipa-server
+      - freeipa-server-dns
+    state: present
+  when: ansible_os_family == "Debian"
 
 - name: Check if FreeIPA is already configured
   stat:
@@ -28,4 +37,3 @@
     {% endif %}
     --mkhomedir
   when: not ipa_config.stat.exists
-
