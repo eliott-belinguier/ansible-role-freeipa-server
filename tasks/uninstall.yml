@@ -1,0 +1,23 @@
+---
+- name: Check if FreeIPA Server is configured
+  stat:
+    path: /etc/ipa/default.conf
+  register: ipa_conf
+
+- name: Uninstall FreeIPA Server
+  command: ipa-server-install --uninstall -U
+  when: ipa_conf.stat.exists
+  ignore_errors: yes
+
+- name: Remove FreeIPA Server Packages
+  package:
+    name:
+      - freeipa-server
+      - freeipa-client
+      - ipa-server
+      - ipa-client
+      - ipa-server-dns
+      - freeipa-server-dns
+    state: absent
+  ignore_errors: yes
+

@@ -1,0 +1,31 @@
+---
+- name: Install FreeIPA Server Packages
+  package:
+    name:
+      - ipa-server
+      - ipa-server-dns
+    state: present
+
+- name: Check if FreeIPA is already configured
+  stat:
+    path: /etc/ipa/default.conf
+  register: ipa_config
+
+- name: Install FreeIPA Server
+  command: >
+    ipa-server-install
+    --unattended
+    --realm={{ ipa_realm }}
+    --domain={{ ipa_domain }}
+    --ds-password={{ ipa_dm_password }}
+    --admin-password={{ ipa_admin_password }}
+    --hostname={{ inventory_hostname }}
+    {% if ipa_setup_dns %}
+    --setup-dns
+    {% for forwarder in ipa_forwarders %}
+    --forwarder={{ forwarder }}
+    {% endfor %}
+    {% endif %}
+    --mkhomedir
+  when: not ipa_config.stat.exists
+

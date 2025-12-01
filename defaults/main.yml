@@ -1,0 +1,9 @@
+ipa_domain: example.com
+ipa_realm: EXAMPLE.COM
+ipa_admin_password: Password123
+ipa_dm_password: Password123
+ipa_setup_dns: false
+ipa_forwarders:
+  - 8.8.8.8
+  - 1.1.1.1
+
